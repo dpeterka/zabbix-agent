@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Zabbix Groups
+if ! grep zabbix /etc/group 2>&1 >/dev/null;then
+ groupadd zabbix
+fi
+
+if ! grep zabbix /etc/passwd 2>&1 >/dev/null;then
+ useradd -g zabbix zabbix
+fi
+

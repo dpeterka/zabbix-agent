@@ -1,0 +1,57 @@
+#!/bin/bash
+
+buildir=../buildir
+
+# We don't want this public
+
+read -p "Package version (e.g. 1.0): " pver
+read -p "Zabbix server (FQDN or IP): " zser
+PS3='Select Architecture: '
+options=("amd64" "i386")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "amd64")
+	    arch=amd64
+	    break
+            ;;
+        "i386")
+            arch=i386
+	    break
+            ;;
+        *) echo invalid option
+	   exit 1
+	   ;;
+    esac
+done
+
+# Copy files
+
+if [  -e $buildir ]; then
+ rm -rf $buildir
+ mkdir $buildir
+else
+ mkdir $buildir
+fi
+cp -r ../etc ../usr ../zabbix_$arch/* $buildir
+
+# Make sure perms are still okay
+chmod +x $buildir/usr/local/bin/*
+chmod +x $buildir/usr/local/sbin/*
+
+# Create config
+
+sed -i -e  "s/^Server=.\+/Server=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
+sed -i -e  "s/^ServerActive=.\+/ServerActive=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
+
+# Effing Package Manager
+
+fpm -t deb -s dir -C $buildir --prefix / -n zabbix-agent-custom -v $pver -a $arch \
+--before-install build-scripts/pre-install --after-install build-scripts/post-install \
+--before-remove build-scripts/pre-remove --url "https://github.com/dpeterka/zabbix-agent" \
+--description 'Installs zabbix agent' --maintainer "<dpeterka@lubelindustries.com>" \
+--inputs inputs
+
+# cleanup
+rm -rf $buildir
+

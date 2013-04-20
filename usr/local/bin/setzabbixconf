@@ -1,0 +1,7 @@
+#!/bin/sh
+HOSTNAME=$(hostname -s)
+# Set Zabbix configuration
+    if [ -e /usr/local/etc/zabbix_agentd.conf ] && ! grep "$HOSTNAME" /usr/local/etc/zabbix_agentd.conf 2>&1 >/dev/null ; then
+      sed -i -e  "s/^Hostname=.\+/Hostname=$HOSTNAME/" /usr/local/etc/zabbix_agentd.conf
+    fi
+
