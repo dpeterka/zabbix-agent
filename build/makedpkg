@@ -41,8 +41,8 @@ chmod +x $buildir/usr/local/sbin/*
 
 # Create config
 
-sed -i -e  "s/^Server=.\+/Server=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
-sed -i -e  "s/^ServerActive=.\+/ServerActive=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
+sed -i -e  "s/^Server=\+/Server=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
+sed -i -e  "s/^ServerActive=\+/ServerActive=$zser/" $buildir/usr/local/etc/zabbix_agentd.conf
 
 # Effing Package Manager
 

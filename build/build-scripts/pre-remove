@@ -1,4 +1,12 @@
 #!/bin/sh
 
-stop zabbix-agent
+check_upstart_service(){
+    status $1 | grep -q "^$1 start" > /dev/null
+    return $?
+}
 
+if [ -f zabbix-agent.conf ]; then
+ if check_upstart_service zabbix-agent; then
+  stop zabbix-agent
+ fi
+fi
