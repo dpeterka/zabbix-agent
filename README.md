@@ -1,7 +1,7 @@
 zabbix-agent
 ============
 
-Zabbix Agent
+Zabbix Agent (2.2.1)
 
 Installs Zabbix Agent
 
